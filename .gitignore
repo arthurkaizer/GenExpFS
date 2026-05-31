@@ -16,3 +16,6 @@ datasets
 
 #Slurm
 /sbatches
+
+.venv/
+venv
