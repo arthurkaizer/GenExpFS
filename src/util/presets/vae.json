@@ -1,0 +1,17 @@
+[
+  {
+    "description": "VAE — Prostate dataset, 3 seeds x 10 stability runs",
+    "datasets": ["Prostate_GSE6919_U95C"],
+    "algorithms": [
+      {
+        "name": "VAE",
+        "params": [
+          [null, 16, 128, 0.01, 100, 16, 42],
+          [null, 16, 128, 0.01, 100, 16, 0],
+          [null, 16, 128, 0.01, 100, 16, 123]
+        ],
+        "runs": 1, "sample_runs": 10
+      }
+    ]
+  }
+]

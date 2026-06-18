@@ -14,6 +14,11 @@ from .ridge import RidgeClassifierFeatureSelector
 from .svm_forward_selector import SVMForwardFeatureSelector
 from .svm_genetic_algorithm import SVMGAFeatureSelector
 from .svm_rfe import SVMRFE
+from .autoencoder_feature_selector import AutoencoderFeatureSelector
+from .sensitivity_feature_selector import SensitivityFeatureSelector
+from .integrated_gradients_feature_selector import IntegratedGradientsFeatureSelector
+from .channel_attention_feature_selector import ChannelAttentionFeatureSelector
+from .vae_feature_selector import VAEFeatureSelector
 
 __all__ = [
     DecisionTreeFeatureSelector,
@@ -31,5 +36,10 @@ __all__ = [
     RidgeClassifierFeatureSelector,
     SVMForwardFeatureSelector,
     SVMGAFeatureSelector,
-    SVMRFE
+    SVMRFE,
+    AutoencoderFeatureSelector,
+    SensitivityFeatureSelector,
+    IntegratedGradientsFeatureSelector,
+    ChannelAttentionFeatureSelector,
+    VAEFeatureSelector,
 ]

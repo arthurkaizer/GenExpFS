@@ -1,0 +1,9 @@
+[
+  {
+    "description": "Lasso — Prostate dataset, 10 stability runs",
+    "datasets": ["Prostate_GSE6919_U95C"],
+    "algorithms": [
+      {"name": "Lasso", "params": [[null]], "runs": 1, "sample_runs": 10}
+    ]
+  }
+]

@@ -1,0 +1,57 @@
+[
+  {
+    "description": "All selectors — Prostate dataset, 10 stability runs (3 for SVM)",
+    "datasets": ["Prostate_GSE6919_U95C"],
+    "algorithms": [
+      {"name": "KruskallWallisFilter", "params": [[null]], "runs": 1, "sample_runs": 10},
+      {"name": "Lasso",               "params": [[null]], "runs": 1, "sample_runs": 10},
+      {"name": "RandomForest", "params": [[null, 42], [null, 0], [null, 123]], "runs": 1, "sample_runs": 10},
+      {
+        "name": "Autoencoder",
+        "params": [
+          [null, 32, 128, 100, 16, 42],
+          [null, 32, 128, 100, 16, 0],
+          [null, 32, 128, 100, 16, 123]
+        ],
+        "runs": 1, "sample_runs": 10
+      },
+      {
+        "name": "VAE",
+        "params": [
+          [null, 16, 128, 0.01, 100, 16, 42],
+          [null, 16, 128, 0.01, 100, 16, 0],
+          [null, 16, 128, 0.01, 100, 16, 123]
+        ],
+        "runs": 1, "sample_runs": 10
+      },
+      {
+        "name": "Sensitivity",
+        "params": [
+          [null, 128, 100, 16, 42],
+          [null, 128, 100, 16, 0],
+          [null, 128, 100, 16, 123]
+        ],
+        "runs": 1, "sample_runs": 10
+      },
+      {
+        "name": "IntegratedGradients",
+        "params": [
+          [null, 128, 100, 16, 50, 42],
+          [null, 128, 100, 16, 50, 0],
+          [null, 128, 100, 16, 50, 123]
+        ],
+        "runs": 1, "sample_runs": 10
+      },
+      {
+        "name": "ChannelAttention",
+        "params": [
+          [null, 128, 100, 16, 42],
+          [null, 128, 100, 16, 0],
+          [null, 128, 100, 16, 123]
+        ],
+        "runs": 1, "sample_runs": 10
+      },
+      {"name": "SVMRFE", "params": [[null]], "runs": 1, "sample_runs": 3}
+    ]
+  }
+]

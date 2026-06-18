@@ -1,0 +1,15 @@
+[
+  {
+    "description": "SVMRFE — all 5 CuMiDa datasets, 3 stability runs",
+    "datasets": [
+      "Prostate_GSE6919_U95C",
+      "Liver_GSE22405",
+      "Breast_GSE70947",
+      "Renal_GSE53757",
+      "Colorectal_GSE44861"
+    ],
+    "algorithms": [
+      {"name": "SVMRFE", "params": [[null]], "runs": 1, "sample_runs": 3}
+    ]
+  }
+]

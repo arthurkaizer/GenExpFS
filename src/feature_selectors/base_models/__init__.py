@@ -1,4 +1,5 @@
 from .base_selector import BaseSelector, ResultType
+from .deep_selector import BaseDeepSelector
 from .embedded import BaseEmbeddedFeatureSelector
 from .forward_feature_selector import ForwardFeatureSelector
 from .genetic_algorithm import GeneticAlgorithmFeatureSelector
@@ -11,6 +12,7 @@ from .recursive_feature_elimination import RFE
 
 __all__ = [
     BaseSelector, ResultType,
+    BaseDeepSelector,
     BaseEmbeddedFeatureSelector,
     ForwardFeatureSelector,
     GeneticAlgorithmFeatureSelector,

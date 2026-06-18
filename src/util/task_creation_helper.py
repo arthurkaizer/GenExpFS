@@ -20,7 +20,12 @@ from feature_selectors import (
     RidgeClassifierFeatureSelector,
     SVMForwardFeatureSelector,
     SVMGAFeatureSelector,
-    SVMRFE
+    SVMRFE,
+    AutoencoderFeatureSelector,
+    SensitivityFeatureSelector,
+    IntegratedGradientsFeatureSelector,
+    ChannelAttentionFeatureSelector,
+    VAEFeatureSelector,
 )
 
 
@@ -41,6 +46,11 @@ feature_selectors = {
     "SVMFowardSelection": SVMForwardFeatureSelector,
     "SVMGeneticAlgorithm": SVMGAFeatureSelector,
     "SVMRFE": SVMRFE,
+    "Autoencoder": AutoencoderFeatureSelector,
+    "Sensitivity": SensitivityFeatureSelector,
+    "IntegratedGradients": IntegratedGradientsFeatureSelector,
+    "ChannelAttention": ChannelAttentionFeatureSelector,
+    "VAE": VAEFeatureSelector,
 }
 
 

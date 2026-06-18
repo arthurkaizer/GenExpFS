@@ -1,0 +1,9 @@
+[
+  {
+    "description": "RandomForest — Prostate dataset, 3 seeds x 10 stability runs",
+    "datasets": ["Prostate_GSE6919_U95C"],
+    "algorithms": [
+      {"name": "RandomForest", "params": [[null, 42], [null, 0], [null, 123]], "runs": 1, "sample_runs": 10}
+    ]
+  }
+]

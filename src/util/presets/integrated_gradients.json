@@ -1,0 +1,17 @@
+[
+  {
+    "description": "IntegratedGradients — Prostate dataset, 3 seeds x 10 stability runs",
+    "datasets": ["Prostate_GSE6919_U95C"],
+    "algorithms": [
+      {
+        "name": "IntegratedGradients",
+        "params": [
+          [null, 128, 100, 16, 50, 42],
+          [null, 128, 100, 16, 50, 0],
+          [null, 128, 100, 16, 50, 123]
+        ],
+        "runs": 1, "sample_runs": 10
+      }
+    ]
+  }
+]
