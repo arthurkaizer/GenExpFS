@@ -60,6 +60,11 @@ run-times:
 analyze:
 	python aux/analyze_results.py --results-path $(RESULTS_PATH)
 
+analyze-cumida:
+	python scripts/analyze_cumida.py \
+		--datasets-path datasets/cumida \
+		--results-path $(RESULTS_PATH)
+
 # ── Diagnósticos ───────────────────────────────────────────────────────────────
 
 entropy-check:

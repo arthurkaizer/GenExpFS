@@ -6,3 +6,4 @@ tqdm>=4.64
 urllib3>=1.26,<3.0
 tensorflow>=2.10.0 
 matplotlib>=3.6
+seaborn>=0.12
