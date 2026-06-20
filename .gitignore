@@ -12,6 +12,7 @@ __pycache__/
 #Results
 /results
 /results-final
+/results_v2
 datasets
 
 #Slurm
