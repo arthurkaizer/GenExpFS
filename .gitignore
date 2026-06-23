@@ -12,9 +12,11 @@ __pycache__/
 #Results
 /results
 /results-final
-/results_v2
-/results_v3
 datasets
+
+#Large selection CSVs
+/results_v2/compare-selection.csv
+/results_v3/compare-selection.csv
 
 #Slurm
 /sbatches
