@@ -59,14 +59,12 @@ class ResultsScorer:
         return pd.concat(scores)
 
     def _summarized_scores(self, scores):
-        fields = {
-            'SupportVectorMachine_macro_f1': np.mean,
-            'DecisionTree_macro_f1': np.mean,
-            'RandomForest_macro_f1': np.mean,
-            'NaiveBayes_macro_f1': np.mean,
-            'ZeroR_macro_f1': np.mean,
-        }
-
+        candidate_cols = [
+            'SupportVectorMachine_macro_f1', 'DecisionTree_macro_f1',
+            'RandomForest_macro_f1', 'NaiveBayes_macro_f1', 'ZeroR_macro_f1',
+            'MLP_macro_f1', 'SupportVectorMachine_macro_f1_std',
+        ]
+        fields = {c: np.mean for c in candidate_cols if c in scores.columns}
         return scores.groupby(['name', 'selected']).agg(fields).reset_index()
 
     def summarized_score_all(self, return_complete=False):

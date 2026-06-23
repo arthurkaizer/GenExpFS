@@ -1,5 +1,5 @@
 from sklearn.model_selection import StratifiedKFold, cross_validate
-from sklearn.preprocessing import minmax_scale
+from sklearn.preprocessing import minmax_scale, LabelEncoder
 
 from .scoring import default_scoring
 from .models import default_models
@@ -12,15 +12,18 @@ class SelectionScorer:
 
     def _eval(self, X, y, model):
         X = minmax_scale(X)
+        y = LabelEncoder().fit_transform(y)
         cv = StratifiedKFold()
 
         results = cross_validate(model, X, y, cv=cv, scoring=self._scoring)
 
-        avg_results = {
-            k.replace("test_", ""): v.mean()
-            for (k, v) in results.items()
-            if not k.endswith("time")
-        }
+        avg_results = {}
+        for k, v in results.items():
+            if k.endswith("time"):
+                continue
+            metric = k.replace("test_", "")
+            avg_results[metric] = v.mean()
+            avg_results[f'{metric}_std'] = v.std()
 
         return avg_results
 
