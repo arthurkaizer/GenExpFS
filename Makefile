@@ -1,4 +1,6 @@
 RESULTS_PATH ?= results_v2
+RESULTS_PATH_V3 ?= results_v3
+PYTHON ?= python3
 
 setup:
 	pip install -r requirements.txt
@@ -12,20 +14,20 @@ lint:
 # ── Dados ──────────────────────────────────────────────────────────────────────
 
 download-cumida:
-	python scripts/download_cumida_datasets.py
+	$(PYTHON) scripts/download_cumida_datasets.py
 
 build-synthetic:
-	python scripts/synthetic_datasets.py
+	$(PYTHON) scripts/synthetic_datasets.py
 
 build-xor:
-	python scripts/xor_dataset.py
+	$(PYTHON) scripts/xor_dataset.py
 
 # ── Pipeline principal (compare_deep) ─────────────────────────────────────────
 
 run-compare: run-select run-scoring run-stability run-times
 
 run-select:
-	python src/main.py select \
+	$(PYTHON) src/main.py select \
 		--presets compare_deep \
 		--datasets_path datasets \
 		--results-path $(RESULTS_PATH) \
@@ -34,7 +36,7 @@ run-select:
 		-vv
 
 run-scoring:
-	python src/main.py scoring \
+	$(PYTHON) src/main.py scoring \
 		--datasets_path datasets \
 		--results-path $(RESULTS_PATH) \
 		--selection-filename compare-selection.csv \
@@ -42,7 +44,7 @@ run-scoring:
 		-vv
 
 run-stability:
-	python src/main.py stability \
+	$(PYTHON) src/main.py stability \
 		--results-path $(RESULTS_PATH) \
 		--selection-filename compare-selection.csv \
 		--stability-filename compare-stability \
@@ -50,30 +52,78 @@ run-stability:
 		-vv
 
 run-times:
-	python src/main.py times \
+	$(PYTHON) src/main.py times \
 		--results-path $(RESULTS_PATH) \
 		--selection-filename compare-selection.csv \
 		-vv
 
+# ── Pipeline v3 (compare_deep_multi — Prostate + Breast) ─────────────────────
+
+run-v3: run-v3-select run-v3-scoring run-v3-stability run-v3-times
+
+run-v3-select:
+	$(PYTHON) src/main.py select \
+		--presets compare_deep_multi \
+		--datasets_path datasets \
+		--results-path $(RESULTS_PATH_V3) \
+		--selection-filename compare-selection \
+		--workers 1 \
+		-vv
+
+run-v3-scoring:
+	$(PYTHON) src/main.py scoring \
+		--datasets_path datasets \
+		--results-path $(RESULTS_PATH_V3) \
+		--selection-filename compare-selection.csv \
+		--scoring-filename compare-scoring \
+		-vv
+
+run-v3-stability:
+	$(PYTHON) src/main.py stability \
+		--results-path $(RESULTS_PATH_V3) \
+		--selection-filename compare-selection.csv \
+		--stability-filename compare-stability \
+		--dataset Prostate_GSE6919_U95C \
+		--workers 1 \
+		-vv
+
+run-v3-times:
+	$(PYTHON) src/main.py times \
+		--results-path $(RESULTS_PATH_V3) \
+		--selection-filename compare-selection.csv \
+		--dataset Prostate_GSE6919_U95C \
+		-vv
+
+run-v3-stats:
+	$(PYTHON) src/main.py stats \
+		--results-path $(RESULTS_PATH_V3) \
+		--scoring-filename compare-scoring \
+		--stats-filename compare-stats \
+		--dataset Prostate_GSE6919_U95C \
+		-vv
+
+analyze-v3:
+	$(PYTHON) aux/analyze_results.py --results-path $(RESULTS_PATH_V3) --dataset Prostate_GSE6919_U95C
+
 # ── Análise de resultados ──────────────────────────────────────────────────────
 
 analyze:
-	python aux/analyze_results.py --results-path $(RESULTS_PATH)
+	$(PYTHON) aux/analyze_results.py --results-path $(RESULTS_PATH)
 
 analyze-cumida:
-	python scripts/analyze_cumida.py \
+	$(PYTHON) scripts/analyze_cumida.py \
 		--datasets-path datasets/cumida \
 		--results-path $(RESULTS_PATH)
 
 # ── Diagnósticos ───────────────────────────────────────────────────────────────
 
 entropy-check:
-	python aux/channel_attention_entropy.py
+	$(PYTHON) aux/channel_attention_entropy.py
 
 # ── Smoke tests ────────────────────────────────────────────────────────────────
 
 run-test:
-	python src/main.py all \
+	$(PYTHON) src/main.py all \
 		--presets test_algorithms \
 		--datasets_path datasets \
 		--results-path results_test \
@@ -83,7 +133,7 @@ run-test:
 # ── Legado ─────────────────────────────────────────────────────────────────────
 
 run:
-	python src/main.py all -p default -n 1 -vv
+	$(PYTHON) src/main.py all -p default -n 1 -vv
 
 run-reduced:
-	python src/main.py all -p reduced -n 31 -vv
+	$(PYTHON) src/main.py all -p reduced -n 31 -vv
