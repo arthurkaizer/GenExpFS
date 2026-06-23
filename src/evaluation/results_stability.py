@@ -24,7 +24,7 @@ class ResultsStability:
         self._n_workers = n_workers
 
     def _summarize_algorithm_stability(self, stability):
-        fields = {
+        mean_fields = {
             'executions': np.sum,
             'jaccard': np.mean,
             'hamming': np.mean,
@@ -34,11 +34,19 @@ class ResultsStability:
             'spearman': np.mean,
             'pearson': np.mean,
         }
+        std_metrics = ['jaccard', 'kuncheva', 'spearman', 'pearson']
 
-        return \
-            stability.drop(['dataset', 'feats'], axis=1) \
-            .groupby(['name', 'selected']) \
-            .agg(fields).reset_index()
+        base = stability.drop(['dataset', 'feats'], axis=1)
+        mean_df = base.groupby(['name', 'selected']).agg(mean_fields).reset_index()
+
+        std_df = (
+            base.groupby(['name', 'selected'])[std_metrics]
+            .std()
+            .rename(columns={c: f'{c}_std' for c in std_metrics})
+            .reset_index()
+        )
+
+        return mean_df.merge(std_df, on=['name', 'selected'])
 
     def algorithms_stability(self, sampling=None, evaluate_at_all_features=False):
         if sampling is not None:
