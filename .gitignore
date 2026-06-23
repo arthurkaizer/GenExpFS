@@ -14,9 +14,11 @@ __pycache__/
 /results-final
 datasets
 
-#Large selection CSVs
+#Large CSVs
 /results_v2/compare-selection.csv
+/results_v2/compare-scoring-complete.csv
 /results_v3/compare-selection.csv
+/results_v3/compare-scoring-complete.csv
 
 #Slurm
 /sbatches

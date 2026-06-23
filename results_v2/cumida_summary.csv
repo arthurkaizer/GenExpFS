@@ -1,0 +1,6 @@
+dataset,n_samples,n_features,n_classes,classes,class_counts,missing,mean_var
+Breast_GSE70947,289,35981,2,normal | breast_adenocarcinoma,146 | 143,0,0.4733
+Colorectal_GSE44861,105,22277,2,normal | tumoral,53 | 52,0,0.3981
+Liver_GSE22405,48,22283,2,normal | heptocarcinoma,24 | 24,0,0.2945
+Prostate_GSE6919_U95C,115,12646,2,primary_prostate_tumor | normal,59 | 56,0,0.0462
+Renal_GSE53757,143,54675,2,normal | ccRCC,72 | 71,0,0.2649

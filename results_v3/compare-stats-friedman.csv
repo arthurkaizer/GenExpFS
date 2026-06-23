@@ -1,0 +1,7 @@
+k,statistic,p_value,significant,methods
+5,41.71428571428575,1.5321038745373511e-06,True,"['SVMRFE', 'KruskallWallisFilter', 'Lasso', 'RandomForest', 'Autoencoder', 'VAE', 'Sensitivity', 'IntegratedGradients', 'ChannelAttention']"
+10,42.666666666666686,1.014944456212566e-06,True,"['SVMRFE', 'KruskallWallisFilter', 'Lasso', 'RandomForest', 'Autoencoder', 'VAE', 'Sensitivity', 'IntegratedGradients', 'ChannelAttention']"
+20,41.60000000000002,1.6095676033253095e-06,True,"['SVMRFE', 'KruskallWallisFilter', 'Lasso', 'RandomForest', 'Autoencoder', 'VAE', 'Sensitivity', 'IntegratedGradients', 'ChannelAttention']"
+50,43.428571428571445,7.293620704185638e-07,True,"['SVMRFE', 'KruskallWallisFilter', 'Lasso', 'RandomForest', 'Autoencoder', 'VAE', 'Sensitivity', 'IntegratedGradients', 'ChannelAttention']"
+100,44.457142857142884,4.6628049860982293e-07,True,"['SVMRFE', 'KruskallWallisFilter', 'Lasso', 'RandomForest', 'Autoencoder', 'VAE', 'Sensitivity', 'IntegratedGradients', 'ChannelAttention']"
+200,41.21904761904764,1.8969179180125968e-06,True,"['SVMRFE', 'KruskallWallisFilter', 'Lasso', 'RandomForest', 'Autoencoder', 'VAE', 'Sensitivity', 'IntegratedGradients', 'ChannelAttention']"
