@@ -1,7 +1,9 @@
 import json
 import os
+from collections import defaultdict
 from itertools import product, chain
 
+import pandas as pd
 
 from task.model import Task
 from feature_selectors import (
@@ -109,6 +111,44 @@ def print_preset(name, preset, verbose, runs):
                 [print(f'\t\t\t{a}: {r} per dataset') for a, r in alg_runs]
                 print("\t\tAlgorithm sampling runs:")
                 [print(f'\t\t\t{a}: {r} per dataset') for a, r in sampling_alg_runs]
+
+
+def filter_completed_tasks(tasks, results_path, selection_filename, verbose=0):
+    """Return only tasks not yet written to the selection CSV.
+
+    Matches tasks to completed results by counting (name, dataset_name, sampling)
+    groups in order — valid as long as tasks were processed sequentially (workers=1).
+    """
+    csv_name = selection_filename if selection_filename.endswith('.csv') else f'{selection_filename}.csv'
+    csv_path = os.path.join(results_path, csv_name)
+
+    if not os.path.exists(csv_path):
+        return tasks
+
+    try:
+        df = pd.read_csv(csv_path)
+    except Exception:
+        return tasks
+
+    completed = defaultdict(int)
+    for _, row in df.iterrows():
+        key = (row['name'], row['dataset_name'], row['sampling'])
+        completed[key] += 1
+
+    seen = defaultdict(int)
+    remaining = []
+    for task in tasks:
+        key = (task.name, task.dataset_name, task.sampling)
+        if seen[key] < completed[key]:
+            seen[key] += 1
+        else:
+            remaining.append(task)
+
+    skipped = len(tasks) - len(remaining)
+    if verbose > 0 and skipped > 0:
+        print(f"Resume: skipping {skipped} completed tasks, {len(remaining)} remaining.")
+
+    return remaining
 
 
 def tasks_from_presets(preset_names, runs=1, verbose=0):

@@ -8,7 +8,7 @@ from util.filesystem import files_in_dir_tree
 
 
 class ResultsLoader:
-    def __init__(self, results_path):
+    def __init__(self, results_path, dataset=None):
         if not os.path.exists(results_path):
             raise Exception(f"'{results_path}' does not exist!")
 
@@ -23,13 +23,19 @@ class ResultsLoader:
                             f"containing csv files or a path to csv itself.")
 
         self._results_path = results_path
+        self._dataset = dataset
 
     def load_all(self):
         if self._is_dir:
             paths = files_in_dir_tree(self._results_path)
-            return pd.concat((pd.read_csv(p) for p in paths), ignore_index=True)
+            df = pd.concat((pd.read_csv(p) for p in paths), ignore_index=True)
         else:
-            return pd.read_csv(self._results_path)
+            df = pd.read_csv(self._results_path)
+
+        if self._dataset is not None and 'dataset_name' in df.columns:
+            df = df[df['dataset_name'] == self._dataset].reset_index(drop=True)
+
+        return df
 
     def load_by(self, field, field_value, allowed_field_values=None):
         if allowed_field_values is not None and field_value not in allowed_field_values:

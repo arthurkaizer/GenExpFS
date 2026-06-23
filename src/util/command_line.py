@@ -101,6 +101,24 @@ def add_times_filename(parser):
     )
 
 
+def add_stats_filename(parser):
+    parser.add_argument(
+        '--stats-filename',
+        default=f'{current_timestamp}-stats',
+        help='File name prefix for statistical test results (friedman/nemenyi/wilcoxon).',
+        type=str
+    )
+
+
+def add_dataset_filter(parser):
+    parser.add_argument(
+        '--dataset',
+        default=None,
+        help='Filter results to a single dataset name before evaluation.',
+        type=str
+    )
+
+
 def add_verbosity(parser):
     parser.add_argument(
         '-v',
@@ -128,6 +146,8 @@ def get_args(arguments=None):
     add_stability_filename(all_parser)
     add_determinism_filename(all_parser)
     add_times_filename(all_parser)
+    add_stats_filename(all_parser)
+    add_dataset_filter(all_parser)
     add_verbosity(all_parser)
 
     # Feature Selection Command
@@ -162,6 +182,7 @@ def get_args(arguments=None):
     add_results_path(stability_parser)
     add_selection_filename(stability_parser)
     add_stability_filename(stability_parser)
+    add_dataset_filter(stability_parser)
     add_verbosity(stability_parser)
 
     # Execution time Command
@@ -169,7 +190,16 @@ def get_args(arguments=None):
     add_results_path(times_parser)
     add_selection_filename(times_parser)
     add_times_filename(times_parser)
+    add_dataset_filter(times_parser)
     add_verbosity(times_parser)
+
+    # Statistical Tests Command
+    stats_parser = subparsers.add_parser('stats', help='Run statistical tests on scoring results.')
+    add_results_path(stats_parser)
+    add_scoring_filename(stats_parser)
+    add_stats_filename(stats_parser)
+    add_dataset_filter(stats_parser)
+    add_verbosity(stats_parser)
 
     args = parser.parse_args(arguments)
     return args

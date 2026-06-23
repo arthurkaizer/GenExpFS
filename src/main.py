@@ -2,6 +2,8 @@ from multiprocessing import Pool, Lock
 import os
 import warnings
 
+import pandas as pd
+from tqdm import tqdm
 from sklearn.exceptions import ConvergenceWarning, UndefinedMetricWarning
 
 from data.dataloader import DataLoader
@@ -11,12 +13,13 @@ from results.loader import ResultsLoader
 from task.runner import TaskRunner
 from util.shared_resources import SharedResources
 from util.command_line import get_args
-from util.task_creation_helper import tasks_from_presets
+from util.task_creation_helper import tasks_from_presets, filter_completed_tasks
 
 from evaluation.results_scorer import ResultsScorer
 from evaluation.results_stability import ResultsStability
 from evaluation.results_execution_time import ExecutionTimesAggregator
 from evaluation.selection import SelectionScorer
+from evaluation.statistical_tests import StatisticalTester
 
 
 warnings.simplefilter(action='ignore', category=DeprecationWarning)
@@ -45,9 +48,9 @@ def main():
     if mode in ['all', 'select', 'scoring']:
         datasets_path = args.datasets_path
 
-    selection_filename = args.selection_filename
+    selection_filename = args.selection_filename if mode not in ['stats'] else None
 
-    if mode in ['all', 'scoring']:
+    if mode in ['all', 'scoring', 'stats']:
         scoring_filename = args.scoring_filename
 
     if mode in ['all', 'determinism']:
@@ -58,6 +61,9 @@ def main():
 
     if mode in ['all', 'times']:
         times_filename = args.times_filename
+
+    if mode in ['all', 'stats']:
+        stats_filename = args.stats_filename
 
     if mode in ['all', 'select', 'scoring']:
         dataloader = DataLoader(datasets_path, normalize=True)
@@ -97,14 +103,18 @@ def main():
     if mode in ['all', 'select']:
         task_runner = TaskRunner(results_writter, selection_filename, verbose=verbose)
         tasks = tasks_from_presets(presets, presets_runs, verbose=verbose)
+        tasks = filter_completed_tasks(tasks, results_path, selection_filename, verbose=verbose)
 
         with Pool(num_workers, SharedResources.set_resources, [shared_resources]) as pool:
-            pool.map(task_runner.run, tasks)
+            list(tqdm(pool.imap_unordered(task_runner.run, tasks), total=len(tasks), desc="select"))
 
-    selection_filename = selection_filename if selection_filename.endswith('.csv') else f'{selection_filename}.csv'
+    if selection_filename is not None:
+        selection_filename = selection_filename if selection_filename.endswith('.csv') else f'{selection_filename}.csv'
+
+    dataset_filter = getattr(args, 'dataset', None)
 
     if mode in ['all', 'scoring', 'stability', 'determinism', 'times']:
-        results_loader = ResultsLoader(os.path.join(results_path, selection_filename))
+        results_loader = ResultsLoader(os.path.join(results_path, selection_filename), dataset=dataset_filter)
 
     if mode in ['all', 'scoring']:
         selection_scorer = SelectionScorer()
@@ -154,6 +164,22 @@ def main():
         times_aggregator = ExecutionTimesAggregator(results_loader)
         exec_times = times_aggregator.aggregated_execution_times()
         results_writter.write_dataframe(exec_times, times_filename)
+
+    if mode in ['all', 'stats']:
+        scoring_csv = scoring_filename if scoring_filename.endswith('.csv') else f'{scoring_filename}-complete.csv'
+        scoring_csv_path = os.path.join(results_path, scoring_csv)
+        try:
+            scoring_df = pd.read_csv(scoring_csv_path)
+            if dataset_filter is not None and 'dataset' in scoring_df.columns:
+                scoring_df = scoring_df[scoring_df['dataset'] == dataset_filter]
+            tester = StatisticalTester()
+            friedman, nemenyi = tester.run(scoring_df)
+            wilcoxon = tester.wilcoxon_pairwise(scoring_df, 'SupportVectorMachine_macro_f1')
+            results_writter.write_dataframe(friedman, f'{stats_filename}-friedman')
+            results_writter.write_dataframe(nemenyi, f'{stats_filename}-nemenyi')
+            results_writter.write_dataframe(wilcoxon, f'{stats_filename}-wilcoxon')
+        except Exception as e:
+            print(f"Could not run statistical tests. Reason: {e}")
 
 
 if __name__ == '__main__':
